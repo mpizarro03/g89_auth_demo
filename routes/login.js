@@ -18,18 +18,18 @@ router.post('/', function (req, res, next) {
       .where('username', username)
       .then((result) => {
         if (result.length !== 1) {
-          res.status(400).send(JSON.stringify({ message: 'Bad username'}))
+          res.status(400).render('login', { errorMessage: 'Bad username. no bueno.' })
         }
         else if (bcrypt.compareSync(password, result[0].password)) {
-          res.status(200).send(JSON.stringify({ message: 'You HACK THE GIBSON'}))
+          res.redirect('/')
         }
         else {
-          res.status(400).send(JSON.stringify({ message: 'Bad password'}))
+          res.status(400).render('login', { errorMessage: 'Bad password. no bueno.' })
         }
       })
   }
   else {
-    res.status(400).send(JSON.stringify({ message: 'Must username and password'}))
+    res.status(400).render('login', { errorMessage: 'Must have username and password' })
   }
 })
 

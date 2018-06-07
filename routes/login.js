@@ -18,13 +18,19 @@ router.post('/', function (req, res, next) {
       .where('username', username)
       .then((result) => {
         if (result.length !== 1) {
-          res.status(400).render('login', { errorMessage: 'Bad username. no bueno.' })
+          res.status(400).render('login', { errorMessage: 'Bad username. Flourine, Uranimum, Carbon, Potassium.' })
         }
         else if (bcrypt.compareSync(password, result[0].password)) {
+          const payload = {
+            username: username,
+            userId: result[0].id
+          }
+          const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1m' })
+          res.cookie('jwt', token)
           res.redirect('/')
         }
         else {
-          res.status(400).render('login', { errorMessage: 'Bad password. no bueno.' })
+          res.status(400).render('login', { errorMessage: 'Bad password' })
         }
       })
   }
